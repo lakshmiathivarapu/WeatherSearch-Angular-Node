@@ -1,0 +1,148 @@
+<div class="container" id="totaldata" *ngIf="!clickFavourite">
+<div>
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <a class="nav-item nav-link active" id="nav-current-tab" data-toggle="tab" href="#nav-current" (click)="displayCurrent()" role="tab" aria-controls="nav-current" aria-selected="true"><span style="text-transform: capitalize">Current</span></a>
+    <a class="nav-item nav-link" id="nav-hourly-tab" data-toggle="tab" href="#nav-hourly" (click)="displayTempChart()" role="tab" aria-controls="nav-hourly" aria-selected="false" cli><span style="text-transform: capitalize">Hourly</span></a>
+    <a class="nav-item nav-link" id="nav-weekly-tab" data-toggle="tab" href="#nav-weekly" (click)="displayWeeklyChart()"  role="tab" aria-controls="nav-weekly" aria-selected="false"><span style="text-transform: capitalize">Weekly</span></a>
+    <a class="nav-item nav-link" id="nav-twitter" (click)="displayTwitter()" style="margin-left:70%"> <img style="max-width:100%;max-height:100%" src='http://athivara.freevar.com/Twitter.png'></a>
+  </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-current" style="margin-top:5%" *ngIf="displaycurrent" role="tabpanel" aria-labelledby="nav-current-tab" style="margin-top:5%">
+	  <div class="card" style=" background-color: #83C6E3; border-color: 3% solid black; max-width: 50%;  margin: auto;">
+      <div class="card-body">
+        <table border="0">
+            <tr> <td> <h3 class="card-title" style="font-size: 1.8vw;"> {{ city }} </h3></td>
+            <td rowspan="4"><img id="stamp" src="{{seal_link}}" style="max-height: 50%; max-width: 50%; float: right;"></td></tr>
+            <tr> <td> <h4 class="card-title" style="color:#1F5E75;font-size: 1.8vw;"> {{ weather_content.timezone }} </h4> </td></tr>
+            <tr><td style="font-size: 1.8vw;"> {{ roundFunction(weather_content.currently.temperature) }} <img src="https://cdn3.iconfinder.com/data/icons/virtual-notebook/16/button_shape_oval-512.png" style="max-height: 4%; max-width: 4%; vertical-align: super;"> F</td>   </tr>
+            <tr class="blank_row"><td colspan="2"></td></tr>
+            <tr style="font-size: 1.2vw;"> <td>{{ weather_content.currently.summary }}</td></tr>
+        </table>
+        <br>
+
+        <table class="displayCard" border="0" style="font-size: 1vw;">
+            <tr>
+                <td><img src="https://cdn2.iconfinder.com/data/icons/weather-74/24/weather-16-512.png" data-toggle="tooltip" data-placement="top" title="Humidity" style="max-height:32%; max-width:32%"></td>
+                <td><img src="https://cdn2.iconfinder.com/data/icons/weather-74/24/weather-25-512.png" data-toggle="tooltip" data-placement="top" title="Pressure" style="max-height:32%; max-width:32%"></td>
+                <td><img src="https://cdn2.iconfinder.com/data/icons/weather-74/24/weather-27-512.png" data-toggle="tooltip" data-placement="top" title="Wind Speed" style="max-height:32%; max-width:32%" ></td>
+                <td><img src="https://cdn2.iconfinder.com/data/icons/weather-74/24/weather-30-512.png" data-toggle="tooltip" data-placement="top" title="Visibility" style="max-height:32%; max-width:32%"></td>
+                <td><img src="https://cdn2.iconfinder.com/data/icons/weather-74/24/weather-28-512.png" data-toggle="tooltip" data-placement="top" title="Cloud Cover" style="max-height:32%; max-width:32%"></td>
+                <td><img src="https://cdn2.iconfinder.com/data/icons/weather-74/24/weather-24-512.png" data-toggle="tooltip" data-placement="top" title="Ozone" style="max-height:32%; max-width:32%"></td>
+            </tr>
+            <tr>
+                <td>{{ weather_content.currently.humidity }}</td>
+                <td>{{ weather_content.currently.pressure }}</td>
+                <td>{{ weather_content.currently.windSpeed }}</td>
+                <td>{{ weather_content.currently.visibility }}</td>
+                <td>{{ weather_content.currently.cloudCover }}</td>
+                <td>{{ weather_content.currently.ozone }}</td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+  </div>
+  <div class="tab-pane fade" id="nav-hourly"  style="margin-top:5%" *ngIf="displayhourly" role="tabpanel" aria-labelledby="nav-hourly-tab">
+	  <select class="browser-default custom-select col-sm-4" (change)="displayTempChart($event.target.value)">
+		<option>Temperature </option>
+		<option>Pressure</option>
+		<option>Humidity</option>
+		<option>Ozone</option>
+		<option>Visibility</option>
+		<option>Wind Speed</option>
+	</select>
+  <div style="display: block" > 
+    <canvas baseChart
+						[datasets]="allChartData"
+						[colors]="allChartColors"
+            [labels]="allChartLabels"
+            [options]="allChartOptions"
+            [legend]="allChartLegend"
+            [chartType]="allChartType" *ngIf="allChartData" >
+    </canvas>
+	 </div>
+	</div>
+<div>
+  <div class="tab-pane fade" id="nav-weekly" *ngIf="displayweekly" style="font:arial;margin-top:15%" role="tabpanel" aria-labelledby="nav-weekly-tab">
+		<h2 style="text-align: center"> Weekly Weather </h2>
+	 <div style="display: block" > 
+    <canvas baseChart
+						[datasets]="weeklyChartData"
+						[colors]="weeklyChartColors"
+            [labels]="weeklyChartLabels"
+            [options]="weeklyChartOptions"
+            [legend]="weeklyChartLegend"
+            [chartType]="weeklyChartType" 
+            (chartClick)="chartClicked($event)"
+            *ngIf="weeklyChartData" id="canvasChart" data-toggle="modal" data-target="#myModal" style="padding:1%"  >
+     </canvas>
+    </div>
+   </div>
+  </div> 
+</div>
+
+  <!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" *ngIf= "modal_data" > 
+    <div class="modal-dialog" style="max-width:22%;max-height:22%">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#4784A3">
+          <h6 class="modal-title" style="text-align: left">{{modal_label}}</h6>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body" style="background-color:#83C6E3;">
+          <div>
+          <div>
+         <table border="0" style="font-size:0.9vw"> <tr><td>
+          <p style="font-size:1.5vw">{{city}} </p>
+          <p style="font-size:1.5vw"> {{modal_data.currently.temperature}} <img src='https://cdn3.iconfinder.com/data/icons/virtual-notebook/16/button_shape_oval-512.png' style="max-width:5%;max-height:5%;vertical-align: super"> F</p>         
+          <p style="font-size:1vw"> {{modal_data.currently.summary}} </p>
+          </td>   
+          <td>  <img src="{{icon_link}}" style="max-height: 70%; max-width: 70%; margin-left:10%"> </td>
+          </tr>
+         </table>
+          </div>
+           
+          </div>
+          <div style="margin-left:40%">
+          <div>
+            <table border="0" style="font-size:0.9vw"> 
+              <tr><td > Precipitation: </td> <td> {{roundTwoDecimals(modal_data.currently.precipIntensity)}} </td></tr>
+              <tr><td > Chance of Rain: </td> <td> {{modal_data.currently.precipProbability*100}} % </td></tr>
+              <tr><td > Wind Speed:  </td> <td> {{roundTwoDecimals(modal_data.currently.windSpeed)}} mph</td></tr>
+              <tr><td > Humidity:   </td> <td> {{modal_data.currently.humidity*100}} % </td></tr>
+              <tr><td > Visibility: </td> <td> {{modal_data.currently.visibility}} miles</td></tr>
+            </table>
+          </div>
+        </div>
+        </div>
+      </div>
+     </div>
+ </div>
+</div>
+</div>
+<div *ngIf="clickFavourite"> 
+  <table class="table">
+          <thead style="background-color:#4784A3">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Image</th>
+              <th scope="col">City</th>
+              <th scope="col">State</th>
+              <th scope="col">Favorites</th>
+            </tr>
+          </thead>
+          <tbody style="background-color:#83C6E3;">
+            <tr>
+              <th scope="row">1</th>
+              <td>{{ clickFavourite.data[0].img }}</td>
+              <td>{{ clickFavourite.data[0].city }}</td>
+              <td>{{ clickFavourite.data[0].state }}</td>
+              <td> <button (click)="displayFavorites()"> Delete </button></td>
+            </tr>
+          </tbody>
+        </table>
+</div>

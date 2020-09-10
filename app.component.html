@@ -1,0 +1,138 @@
+<html>
+<head>
+	<title> Weather Search Application</title>
+</head>
+
+<body>
+<div class="container form_style" style="margin-top: 1%;">
+	<div style="width: 80%; margin: auto;">
+	<div ng-controller="WeatherSearchController" class="jumbotron" style="color: white; background-color: #4784A3; border: 1px solid black; box-shadow: 4px 4px 5px #4d4d4d"> 
+		<p style="text-align: center; font-size:xx-large"> Weather Search</p>
+	  <form  [formGroup]="weathersearch" (ngSubmit)="AddressSubmitFunction();"novalidate class="simple-form" method="post" style="margin-left:10%">	
+     <div class="form-group row">
+       <label for="street" class="col-sm-2 col-form-label" >Street <span style="color:red">*</span></label>
+        <div class="col-sm-8">
+					<input type="text" class="form-control"  required name="street" id="street" style="border:black;background-image:None;" formControlName="street" placeholder="Enter Street Name">
+					<div *ngIf="weathersearch.controls['street'].invalid && (weathersearch.controls['street'].dirty || weathersearch.controls['street'].touched)">
+            <p *ngIf="weathersearch.controls['street'].errors.required" style="color:red">
+            Please enter a street.
+						</p>
+				</div>
+				</div>
+		</div>
+
+<div class="form-group row">
+ <label for="city" class="col-sm-2 col-form-label"  >City <span style="color:red">*</span></label>
+ <div class="col-sm-8">
+  <input matInput type="text" [matAutocomplete]="auto" name="city" id="city" formControlName="city" placeholder="Enter City Name"  class="form-control" style="border:black;background-image:None;">
+	<mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let city of all_cities" [value]="city.structured_formatting.main_text">
+					<span>{{city.structured_formatting.main_text}}</span>
+        </mat-option>
+	</mat-autocomplete>
+	<div *ngIf="weathersearch.controls['city'].invalid && (weathersearch.controls['city'].dirty || weathersearch.controls['city'].touched)">
+            <p *ngIf="weathersearch.controls['city'].errors.required" style="color:red">
+            Please enter a city.
+						</p>
+	</div>
+ </div>
+</div>
+
+<p id="cityblank" style="color:red"></p>
+<div class="form-group row">
+  <label for="street" class="col-sm-2 col-form-label" >State</label>
+    <div class="col-sm-4">
+      <select name="state" id="state" required class="browser-default custom-select" style="border:black" formControlName="state" >
+          <option value="" selected disabled> Select State </option>
+          <option> ----------------------------------- </option>
+        	<option value="AL">Alabama</option>
+        	<option value="AK">Alaska</option>
+        	<option value="AZ">Arizona</option>
+        	<option value="AR">Arkansas</option>
+        	<option value="CA">California</option>
+        	<option value="CO">Colorado</option>
+        	<option value="CT">Connecticut</option>
+        	<option value="DE">Delaware</option>
+        	<option value="DC">District Of Columbia</option>
+        	<option value="FL">Florida</option>
+        	<option value="GA">Georgia</option>
+        	<option value="HI">Hawaii</option>
+        	<option value="ID">Idaho</option>
+        	<option value="IL">Illinois</option>
+        	<option value="IN">Indiana</option>
+        	<option value="IA">Iowa</option>
+        	<option value="KS">Kansas</option>
+        	<option value="KY">Kentucky</option>
+        	<option value="LA">Louisiana</option>
+        	<option value="ME">Maine</option>
+        	<option value="MD">Maryland</option>
+        	<option value="MA">Massachusetts</option>
+        	<option value="MI">Michigan</option>
+        	<option value="MN">Minnesota</option>
+        	<option value="MS">Mississippi</option>
+        	<option value="MO">Missouri</option>
+        	<option value="MT">Montana</option>
+        	<option value="NE">Nebraska</option>
+        	<option value="NV">Nevada</option>
+        	<option value="NH">New Hampshire</option>
+        	<option value="NJ">New Jersey</option>
+        	<option value="NM">New Mexico</option>
+        	<option value="NY">New York</option>
+        	<option value="NC">North Carolina</option>
+        	<option value="ND">North Dakota</option>
+        	<option value="OH">Ohio</option>
+        	<option value="OK">Oklahoma</option>
+        	<option value="OR">Oregon</option>
+        	<option value="PA">Pennsylvania</option>
+        	<option value="RI">Rhode Island</option>
+        	<option value="SC">South Carolina</option>
+        	<option value="SD">South Dakota</option>
+        	<option value="TN">Tennessee</option>
+        	<option value="TX">Texas</option>
+        	<option value="UT">Utah</option>
+        	<option value="VT">Vermont</option>
+        	<option value="VA">Virginia</option>
+        	<option value="WA">Washington</option>
+        	<option value="WV">West Virginia</option>
+        	<option value="WI">Wisconsin</option>
+        	<option value="WY">Wyoming</option>
+       </select>
+    </div>
+</div>
+
+
+<div class="form-group row col-sm-6">
+	<label class="form-check-label" for="current_location">
+			<input type="checkbox" class="" id="current_location" (change)="CurrentLocation($event);">
+          Current Location
+			</label>
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-2">
+			<button type="submit" [disabled]="weathersearch.invalid" class="btn btn-default form-control" style="background-color:white; border-color:black;" value="submit"><i class="material-icons md-18" style="float: left;">search</i><span style="text-transform: capitalize">Search</span></button>
+    </div>
+		<div class="col-sm-2">
+			<button type="button" class="btn btn-default form-control" (click)="clearFunction(); weathersearch.reset();" style="background-color:white; border-color:black;" value="clear"> <i class="material-icons md-18" style="float: left;">clear_all</i><span style="text-transform: capitalize">Clear</span></button>
+	 </div>
+</div>
+</form>
+
+</div>
+<div class="form-group row" style="margin-left:35%">
+    <div class="col-sm-3">
+			<button type="button" class="btn btn-default form-control" (click)="AddressSubmitFunction()" style="background-color:#4784A3; border-color:black;" value="results"><span style="text-transform: capitalize">Results</span></button>
+    </div>
+		<div class="col-sm-3">
+			<button type="button" class="btn btn-default form-control" (click)="displayFavourites()" style="background-color:white; border-color:black;" value="favourites"><span style="text-transform: capitalize">Favourites</span></button>
+	 </div>
+</div>
+</div>
+<div style="margin-top:5%"></div>
+<p *ngIf="invalid_address" class="form-control" style="background-image:None;background-color:gold;color:goldenrod"> Invalid Address </p>
+</div>
+<div style="margin-top:5%">
+<app-data-service *ngIf="weather_data || clickFavourite" [clickFavourite]="clickFavourite" [displaycurrent]="displaycurrent" [city]="city" [seal_link]="seal_link" [state]="state" [weather_content]="weather_data"> </app-data-service>
+</div>
+</body>
+</html>
